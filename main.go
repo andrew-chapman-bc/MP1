@@ -1,16 +1,8 @@
 package main
-
-// "./unicast/receive.go"
-//	"./unicast/send.go"
-//	"./unicast/tpcC.go"
-//	"./unicast/tpcS.go"
 import (
+	"./unicast"
 	"fmt"
 	"strings"
-	"unicast/receive.go"
-	"unicast/send.go"
-	"unicast/tpcC.go"
-	"unicast/tpcS.go"
 )
 
 func getInput() {
@@ -25,7 +17,7 @@ func getInput() {
 }
 
 func createStruct(destination, message string) {
-	var input userInput
-	input.destination = destination
-	input.message = message
+	var input unicast.UserInput
+	input.Destination = destination
+	input.Message = message
 }

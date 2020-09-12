@@ -1,6 +1,6 @@
 package unicast
 
-type userInput struct {
-	destination string
-	message     string
+type UserInput struct {
+	Destination string
+	Message     string
 }
