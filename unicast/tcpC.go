@@ -1,12 +1,15 @@
 package unicast
 
 import (
-	"fmt"
-	"net"
-	"log"
-	"os"
 	"bufio"
+	"fmt"
+	"log"
+	"math/rand"
+	"net"
+	"os"
+	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -31,7 +34,7 @@ func connectToTCPServer(connect string) net.Conn {
 	return c
 }
 
-func getDelay() {
+func getDelay() Delay{
 	config, err := os.Open("config.txt")
 	scanner := bufio.NewScanner(config)
 	scanner.Split(bufio.ScanLines)
@@ -48,6 +51,7 @@ func getDelay() {
 	var delayStruct Delay
 	delayStruct.min_delay = delays[0]
 	delayStruct.max_delay = delays[1]
+	return delayStruct
 } 
 
 func scanConfig(destination string) []string {
@@ -93,6 +97,11 @@ func sendMessage(destination, message string) {
 	fmt.Fprintf(c, message)
 	timeOfSend := time.Now().Format("02 Jan 06 15:04 MST")
 	fmt.Println("Sent message " + message + " to destination " + destination + " system time is: " + timeOfSend)
-
-
+	netDelay := getDelay()
+	rand.Seed(time.Now().UnixNano())
+	min, _ := strconv.Atoi(netDelay.min_delay)
+	max, _ := strconv.Atoi(netDelay.max_delay)
+	delayTime := rand.Intn(max - min + 1) + min
+	//TODO: Decide if we want this here or in other file
+	time.Sleep(time.Duration(delayTime))
 }
