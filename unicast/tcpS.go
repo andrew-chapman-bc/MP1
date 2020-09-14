@@ -8,6 +8,7 @@ import (
 	"time"
 	"os"
 	"log"
+	"errors"
 )
 
 /*
@@ -17,7 +18,7 @@ import (
 	@params: N/A
 	@returns: []string
 */
-func ScanConfigForServer() []string {
+func ScanConfigForServer(source string) (string, error) {
 	config, err := os.Open("config.txt")
 	if err != nil {
 		fmt.Println(err)
@@ -25,7 +26,6 @@ func ScanConfigForServer() []string {
 
 	scanner := bufio.NewScanner(config)
 	scanner.Split(bufio.ScanLines)
-	portArray := []string{}
 	counter := 0
 	for {
 		success := scanner.Scan()
@@ -39,14 +39,17 @@ func ScanConfigForServer() []string {
 				break
 			}
 		}
+		// don't check the first line
 		if (counter != 0) {
 			configArray := strings.Fields(scanner.Text())
 			port := configArray[2]
-			portArray = append(portArray, port)
+			if (configArray[0] == source) {
+				return port, nil
+			}
 		}
 		counter++
 	}
-	return portArray
+	return "", errors.New("Cannot find port")
 }
 
 
@@ -76,6 +79,7 @@ func CreateUserInputStruct(destination, message, source string) UserInput {
 func handleConnection(c net.Conn) {
 	for {
 		netData, err := bufio.NewReader(c).ReadString('\n')
+		fmt.Println("NETDATA: ", netData)
         if err != nil {
             fmt.Println(err)
             return
@@ -83,7 +87,12 @@ func handleConnection(c net.Conn) {
 		netArray := strings.Fields(netData)
 		timeOfReceive := time.Now().Format("02 Jan 06 15:04 MST")
 		fmt.Println("Received " + netArray[0] + " from process " + netArray[1] + "system time is: " + timeOfReceive)
+		// c.Write([]byte("Received " + netArray[0] + " from process " + netArray[1] + "system time is: " + timeOfReceive))
+		if netArray[0] == "STOP" {
+			break
+		}
 	}
+	c.Close()
 }
 
 /*
@@ -107,6 +116,5 @@ func ConnectToTCPClient(PORT string) {
 			fmt.Println(err)
 		}
 		go handleConnection(c)
-		time.Sleep(1)
 	}
 }

@@ -7,6 +7,8 @@ import (
 	"sync"
 	"strings"
 	"time"
+	"github.com/akamensky/argparse"
+	"strconv"
 )
 
 /*
@@ -50,14 +52,12 @@ func parseInput() (unicast.UserInput, unicast.Connection) {
 	@params: {WaitGroup}
 	@returns: N/A
 */
-func openTCPServerConnections(wg *sync.WaitGroup) {
-	openPortsArr := unicast.ScanConfigForServer()
-	fmt.Println(openPortsArr)
-	defer wg.Done()
-	for _, port := range openPortsArr {
-		// I think the goroutine inside of here is getting stuck and not finishing => only the first port is opened
-		unicast.ConnectToTCPClient(port)
+func openTCPServerConnections( source *string, wg *sync.WaitGroup) {
+	openPort, err := unicast.ScanConfigForServer(*source)
+	if openPort == "" {
+		fmt.Println(err)
 	}
+	unicast.ConnectToTCPClient(openPort)
 }
 
 /*
@@ -74,33 +74,20 @@ func unicastSend(inputStruct unicast.UserInput, connection unicast.Connection, w
 }
 
 func main() {
+	parser := argparse.NewParser("", "Concurrent TCP Channels")
+	i := parser.Int("i", "int", &argparse.Options{Required: true, Help: "Source destination/identifiers"})
+	err := parser.Parse(os.Args)
+	if err != nil {
+		fmt.Print(parser.Usage(err))
+	}
+	s := strconv.Itoa(*i)
+
 	var wg sync.WaitGroup
 	wg.Add(1)
-	go openTCPServerConnections(&wg)
+	go openTCPServerConnections(&s, &wg)
 	inputStruct, connection := parseInput()
 	wg.Add(1)
 	go unicastSend(inputStruct, connection, &wg)
 	wg.Wait()
 	fmt.Println("We finished!")
 }
-
-
-/* 
-//	Throwing this here for now
-// 
-func sleepFun(sec time.Duration, wg *sync.WaitGroup) {
-    defer wg.Done()
-    time.Sleep(sec * time.Second)
-    fmt.Println("goroutine exit")
-}
-
-func main() {
-    var wg sync.WaitGroup
-
-    wg.Add(2)
-    go sleepFun(1, &wg)
-    go sleepFun(3, &wg)
-    wg.Wait()
-    fmt.Println("Main goroutine exit")
-}
-*/
