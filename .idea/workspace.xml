@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db7d57fe-512a-4268-984d-09fa6d49171a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -48,5 +47,9 @@
       <screen x="0" y="23" width="1440" height="825" />
     </state>
     <state x="448" y="244" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1440.825@0.23.1440.825" timestamp="1599696185710" />
+    <state x="312" y="174" width="670" height="676" key="search.everywhere.popup" timestamp="1600126336312">
+      <screen x="0" y="23" width="1440" height="827" />
+    </state>
+    <state x="312" y="174" width="670" height="676" key="search.everywhere.popup/0.23.1440.827@0.23.1440.827" timestamp="1600126336312" />
   </component>
 </project>

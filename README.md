@@ -79,6 +79,27 @@ To read the config file, it is read line by line, and uses whitespace to differe
 
 To add more processes, add a new line, with an ID, IP, and port number
 
+For example:
+-----------------------------------------------------------------------------------------------    
+10 15
+1 127.0.0.1 1234
+2 127.0.0.1 4567
+-----------------------------------------------------------------------------------------------
+
+Goes to 
+
+-----------------------------------------------------------------------------------------------    
+10 15
+1 127.0.0.1 1234
+2 127.0.0.1 4567
+3 127.0.0.1 8543
+4 127.0.0.1 1432
+-----------------------------------------------------------------------------------------------
+
+To go from 2 to 4 processes
+
+It is all on local host right now, so the IP is repeated for all of the processes
+
 Since the program is basic, it is all that was necessary 
 
 In a more complex program, we would use a different file format of the config, i.e JSON
@@ -102,4 +123,18 @@ It takes in the parsed input from the main, and connects to the proper destinati
 It then takes the system time and tells the user what was sent, to where, and at what time
 
 In tcpS.go 
+TODO:ADD MORE HERE
 
+###Shortcomings and Potential Improvemnts 
+As of right now, each process and only send out one message each
+
+One way to improve this would be to have the user's input go through a goroutine which can constantly read messages
+and parse them to send to the sever
+
+We are also sending raw strings over TCP channels, which in any situation more complex than 
+the one string we are sending, would be ineffiecnt 
+
+Can improve by using JSON or GOB encoding
+
+There could also be a stop command which closes the channels and does not require the user to use 
+command c 
