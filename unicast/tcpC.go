@@ -13,25 +13,32 @@ import (
 	"errors"
 )
 
+// UserInput holds user input such as message, destination and source
 type UserInput struct {
 	Destination string
 	Message     string
 	Source 		string
 }
 
-//keeps track of delay bounds from config
+// Delay keeps track of delay bounds from config
 type Delay struct {
-	min_delay string
-	max_delay string
+	minDelay string
+	maxDelay string
 }
-
+// Connection holds the ip/port and source
 type Connection struct {
 	ip 		string
 	port 	string
 	source 	string
 }
 
-
+/*
+	@function: ScanConfig
+	@description: Scans the config file using the user input destination and retrieves the ip/port that will later be used to connect to the TCP server
+	@exported: True
+	@params: {userInput} 
+	@returns: {Connection}
+*/
 func ScanConfig(userInput UserInput) Connection {
 
 	destination := userInput.Destination
@@ -64,12 +71,18 @@ func ScanConfig(userInput UserInput) Connection {
 			connection.port = configArray[2]
 			connection.source = userInput.Source
 		}
-		counter++
 	}
 	return connection
-}
+} 
 
-
+/*
+	@function: connectToTCPServer
+	@description:	Connects to the TCP server with the ip/port obtained from config file as a parameter and 
+					returns the connection to the server which will later be used to write to the server
+	@exported: false
+	@params: string 
+	@returns: net.Conn, err
+*/
 func connectToTCPServer(connect string) (net.Conn, error) {
 	// Dial in to the TCP Server, return the connection to it
 	c, err := net.Dial("tcp", connect)
@@ -79,8 +92,16 @@ func connectToTCPServer(connect string) (net.Conn, error) {
 	}
 
 	return c, errors.New("Error connecting to server")
-}
+} 
 
+
+/*
+	@function: getDelayParams
+	@description: Scans the config file for the first line to get the delay parameters that will be used to simulate the network delay
+	@exported: false
+	@params: N/A 
+	@returns: Delay, error
+*/
 func getDelayParams() (Delay, error) {
 	config, err := os.Open("config.txt")
 	scanner := bufio.NewScanner(config)
@@ -96,21 +117,35 @@ func getDelayParams() (Delay, error) {
 	}
 	delays := strings.Fields(scanner.Text())
 	var delayStruct Delay
-	delayStruct.min_delay = delays[0]
-	delayStruct.max_delay = delays[1]
+	delayStruct.minDelay = delays[0]
+	delayStruct.maxDelay = delays[1]
 	return delayStruct, errors.New("Error: Cannot fetch delay params")
 } 
 
+/*
+	@function: generateDelay
+	@description: Uses the delay parameters obtained from getDelayParams() to generate the delay that will be used in sendMessage function
+	@exported: false
+	@params: Delay
+	@returns: N/A
+*/
 func generateDelay (delay Delay) {
 	rand.Seed(time.Now().UnixNano())
-	min, _ := strconv.Atoi(delay.min_delay)
-	max, _ := strconv.Atoi(delay.max_delay)
+	min, _ := strconv.Atoi(delay.minDelay)
+	max, _ := strconv.Atoi(delay.maxDelay)
 	delayTime := rand.Intn(max - min + 1) + min
 	//TODO: Decide if we want this here or in other file
 	time.Sleep(time.Duration(delayTime))
-}
+} 
 
-
+/*
+	@function: SendMessage
+	@description: 	SendMessage sends the message from TCPClient to TCPServer by connecting to the server and 
+					using the Fprintf function to send the message.  After it does this, it calls generateDelay to simulate a network delay
+	@exported: True
+	@params: {UserInput}, {Connection}
+	@returns: N/A
+*/
 func SendMessage( messageParams UserInput, connection Connection ) {
 	connectionString := connection.ip + ":" + connection.port
 	c, err := connectToTCPServer(connectionString)
@@ -130,5 +165,5 @@ func SendMessage( messageParams UserInput, connection Connection ) {
 	
 	// Generate Delay
 	generateDelay(delay)
-}
+} 
 

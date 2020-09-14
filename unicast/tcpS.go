@@ -3,12 +3,18 @@ package unicast
 import (
 	"fmt"
 	"net"
-	"errors"
 	"bufio"
 	"strings"
 	"time"
 )
 
+/*
+	@function: CreateUserInputStruct
+	@description: Uses a destination, message and source string to construct a UserInput struct to send and receive the message across the server/client
+	@exported: True
+	@params: string, string, string
+	@returns: {UserInput}
+*/
 func CreateUserInputStruct(destination, message, source string) UserInput {
 	var input UserInput
 	input.Destination = destination
@@ -17,9 +23,16 @@ func CreateUserInputStruct(destination, message, source string) UserInput {
 	return input
 }
 
+
+/*
+	@function: handleConnection
+	@description: handles connections to the concurrent TCP client and receives messages that are sent over through a goroutine in connectToTCPClient
+	@exported: False
+	@params: net.Conn
+	@returns: N/A
+*/
 func handleConnection(c net.Conn) {
 	for {
-		// string message, string source
 		netData, err := bufio.NewReader(c).ReadString('\n')
         if err != nil {
             fmt.Println(err)
@@ -31,8 +44,14 @@ func handleConnection(c net.Conn) {
 	}
 }
 
-
-func connectToTCPClient(PORT string) {
+/*
+	@function: connectToTCPClient
+	@description: Opens a concurrent TCP Server and calls the net.Listen function to connect to the TCP Client
+	@exported: True
+	@params: string
+	@returns: N/A
+*/
+func ConnectToTCPClient(PORT string) {
 	// listen/connect to the tcp client
 	l, err := net.Listen("tcp4", PORT)
 	if err != nil {
@@ -47,32 +66,3 @@ func connectToTCPClient(PORT string) {
 		}
 	}
 }
-
-
-// Deprecated?
-// func ReceiveMessage( messageParams UserInput, connection Connection) {
-// 	source := connection.port
-// 	if source == "" {
-// 		fmt.Println("Port number not provided... Exiting")
-// 	}
-// 	sender := connection.source
-// 	if sender == "" {
-// 		fmt.Println("Error: No Sender")
-// 	}
-
-// 	Connect, err := connectToTCPClient(source)
-// 	if err != nil {
-// 		fmt.Println("Error: ", err)
-		
-// 	}
-
-// 	netData, err := bufio.NewReader(Connect).ReadString('\n')
-// 	if err != nil {
-// 		fmt.Println("Error writing data: ", err)
-// 	}
-
-// 	netArray := strings.Fields(netData)
-// 	fmt.Println(netArray)
-
-
-// }
