@@ -3,7 +3,7 @@
 #To Run
 The config is currently set up to handle multiple processes
 
-This example is for two, but to add more, simply repeat steps in new terminals
+Simply repeat steps in new terminals to have as many processes as needed
 
 Open one terminal and enter
 ```bash
@@ -13,11 +13,22 @@ Then open up a second terminal and enter
 ```bash
 go run main.go --int 2
 ```
-To send a message, go back to the first terminal and send
+Then open up a third terminal and enter
+```bash
+go run main.go --int 3
+```
+Then open up a fourth terminal and enter
+```bash
+go run main.go --int 4
+```
+To send a message, go to any terminal and send
 
 ```bash
 send 2 hello
 ```
+
+(the 2 and hello are obviously interchangable)
+
 Should output on this terminal with a different time
 ```bash 
 Sent message hello to destination 2 system time is: 14 Sep 20 18:19 EDT
@@ -58,13 +69,15 @@ ID1 IP1 port1
 
 ID2 IP2 port2
 
+ID3 IP3 port3
+
+ID4 IP4 port4
+
 .... .... .......
 -----------------------------------------------------------------------------------------------
 To read the config file, it is read line by line, and uses whitespace to differentiate between the different values
 
 To add more processes, add a new line, with an ID, IP, and port number
-
-TODO: Config old tow process and new four process 
 
 Since the program is basic, it is all that was necessary 
 
