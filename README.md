@@ -1,6 +1,13 @@
 #MP1
 --- 
 #To Run
+
+In terms of dependencies, the only one that you need to download is the argparse golang package.  You can download this by running this command into one of your open terminals:
+```
+$ go get -u -v github.com/akamensky/argparse
+``` 
+
+
 The config is currently set up to handle multiple processes
 
 Simply repeat steps in new terminals to have as many processes as needed
@@ -60,6 +67,38 @@ Received hi from process 2 system time is: 14 Sep 20 18:19 EDT
 Each process starts off by initalizing a concurrent TCP server
 The user's commandline input and config file are used to generate the port number
 
+
+We have three structures designed to make passing data around easier and more readable.
+
+They are as follows: 
+
+The UserInput struct is used to easily access and pass around the destination, message and source (who sent what) throughout the program without sending strings everywhere
+
+```
+type UserInput struct {
+	Destination string
+	Message     string
+	Source 		string
+}
+```
+
+The Delay structure is to have the delay parameters saved to make it more readable and accessable in our codebase
+```
+type Delay struct {
+	minDelay string
+	maxDelay string
+}
+```
+
+The connection struct was created to more easily pass around the IP/Port to connect to on the client side.  Additionally we realized that we also needed the source many times throughout our codebase, so we also included that in the struct.
+```
+type Connection struct {
+	ip 		string
+	port 	string
+	source 	string
+}
+```
+
 ###Config file
 The config file has the following format in a txt file
 -----------------------------------------------------------------------------------------------    
@@ -103,6 +142,7 @@ It is all on local host right now, so the IP is repeated for all of the processe
 Since the program is basic, it is all that was necessary 
 
 In a more complex program, we would use a different file format of the config, i.e JSON
+
 ###Input
 The user inputs three strings, : 
 1. "Send"
@@ -122,8 +162,19 @@ It takes in the parsed input from the main, and connects to the proper destinati
 
 It then takes the system time and tells the user what was sent, to where, and at what time
 
-In tcpS.go 
-TODO:ADD MORE HERE
+
+In tcpS.go, 
+
+we have a function ScanConfigForServer which has a string parameter for the source and returns a string and error.  This function scans the config file for the port that will be used, and returns an error "cannot find port" if the port is not found for user convenience.
+
+The exported function CreateUserInputStruct is used to easily create the userInput struct that is needed throughout the code (this contains the destination, message and source)
+
+The handleConnection function is used to receive the messages and is used as a goroutine so there is a separate thread for it.  
+We call the getDelayParams function here outside of the for loop so if we ever decided to add support for multi-messaging the delay doesn't get meaninglessly calculated.  
+
+
+The exported function ConnectToTCPClient is used call the net.Listen function to connect the TCP client and keep a TCP Client connection constantly open.  This is why we have the for loop and goroutine handleConnection call.
+
 
 ###Shortcomings and Potential Improvemnts 
 As of right now, each process and only send out one message each
