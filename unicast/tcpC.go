@@ -19,6 +19,7 @@ type UserInput struct {
 	Source 		string
 }
 
+//keeps track of delay bounds from config
 type Delay struct {
 	min_delay string
 	max_delay string

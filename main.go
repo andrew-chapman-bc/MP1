@@ -1,9 +1,8 @@
 package main
 import (
 	"./unicast"
-	"fmt"
-	"strings"
 	"bufio"
+	"fmt"
 	"os"
 	"sync"
 )
