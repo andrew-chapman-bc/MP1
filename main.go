@@ -63,7 +63,7 @@ func openTCPServerConnections() {
 	@params: {UserInput}, {Connection}, {WaitGroup}
 	@returns: N/A
 */
-func unicastSend(inputStruct unicast.UserInput, connection unicast.Connection, wg sync.WaitGroup) {
+func unicastSend(inputStruct unicast.UserInput, connection unicast.Connection, wg *sync.WaitGroup) {
 	defer wg.Done()
 	unicast.SendMessage(inputStruct, connection)
 }
@@ -74,7 +74,7 @@ func main() {
 	inputStruct, connection := parseInput()
 	wg.Add(2)
 
-	go unicastSend(inputStruct, connection, wg)
+	go unicastSend(inputStruct, connection, &wg)
 }
 
 
