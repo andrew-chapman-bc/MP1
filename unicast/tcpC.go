@@ -163,7 +163,7 @@ func SendMessage( messageParams UserInput, connection Connection ) {
 	}
 	
 	// Sending the message to TCP Server
-	fmt.Fprintf(c, messageParams.Message, messageParams.Source)
+	fmt.Fprintf(c, messageParams.Message + " " + messageParams.Source + "\n")
 	timeOfSend := time.Now().Format("02 Jan 06 15:04 MST")
 	fmt.Println("Sent message " + messageParams.Message + " to destination " + messageParams.Destination + " system time is: " + timeOfSend)
 	

@@ -36,9 +36,9 @@ func getInput() []string {
 	@params: N/A
 	@returns: {UserInput}, {Connection}
 */
-func parseInput() (unicast.UserInput, unicast.Connection) {
+func parseInput(source *string) (unicast.UserInput, unicast.Connection) {
 	inputArray := getInput()
-	inputStruct := unicast.CreateUserInputStruct(inputArray[1], inputArray[2], os.Args[1])
+	inputStruct := unicast.CreateUserInputStruct(inputArray[1], inputArray[2], *source)
 	fmt.Println(inputStruct)
 	connection := unicast.ScanConfigForClient(inputStruct)
 	return inputStruct, connection
@@ -85,7 +85,7 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go openTCPServerConnections(&s, &wg)
-	inputStruct, connection := parseInput()
+	inputStruct, connection := parseInput(&s)
 	wg.Add(1)
 	go unicastSend(inputStruct, connection, &wg)
 	wg.Wait()

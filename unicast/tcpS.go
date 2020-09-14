@@ -86,8 +86,7 @@ func handleConnection(c net.Conn) {
 		}
 		netArray := strings.Fields(netData)
 		timeOfReceive := time.Now().Format("02 Jan 06 15:04 MST")
-		fmt.Println("Received " + netArray[0] + " from process " + netArray[1] + "system time is: " + timeOfReceive)
-		// c.Write([]byte("Received " + netArray[0] + " from process " + netArray[1] + "system time is: " + timeOfReceive))
+		fmt.Println("Received " + netArray[0] + " from process " + netArray[1] + " system time is: " + timeOfReceive)
 		if netArray[0] == "STOP" {
 			break
 		}
