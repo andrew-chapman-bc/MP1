@@ -21,8 +21,6 @@ func getInput() []string {
 	fmt.Println("Enter input >> ")
 	reader := bufio.NewReader(os.Stdin)
 	input, _ := reader.ReadString('\n')
-	// input: "send destination message"
-	// input array: [send, destination, message]
 	inputArray := strings.Fields(input)
 	return inputArray
 
@@ -50,7 +48,8 @@ func parseInput(source *string) (unicast.UserInput, unicast.Connection) {
 	@params: {WaitGroup}
 	@returns: N/A
 */
-func openTCPServerConnections( source *string, wg *sync.WaitGroup) {
+func openTCPServerConnections(source *string) {
+	// Need to send the source string in here so we know what port to look for
 	openPort, err := unicast.ScanConfigForServer(*source)
 	if openPort == "" {
 		fmt.Println(err)
@@ -67,10 +66,12 @@ func openTCPServerConnections( source *string, wg *sync.WaitGroup) {
 */
 func unicastSend(inputStruct unicast.UserInput, connection unicast.Connection, wg *sync.WaitGroup) {
 	defer wg.Done()
+	// Send the message using UserInput struct and Connection struct to easily pass around data
 	unicast.SendMessage(inputStruct, connection)
 }
 
 func main() {
+	// Use argparse library to get accurate command line data
 	parser := argparse.NewParser("", "Concurrent TCP Channels")
 	i := parser.Int("i", "int", &argparse.Options{Required: true, Help: "Source destination/identifiers"})
 	err := parser.Parse(os.Args)
@@ -79,9 +80,10 @@ func main() {
 	}
 	s := strconv.Itoa(*i)
 
+	// Use a wait group for goroutines
 	var wg sync.WaitGroup
 	wg.Add(1)
-	go openTCPServerConnections(&s, &wg)
+	go openTCPServerConnections(&s)
 	inputStruct, connection := parseInput(&s)
 	wg.Add(1)
 	go unicastSend(inputStruct, connection, &wg)

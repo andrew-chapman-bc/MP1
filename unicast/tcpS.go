@@ -34,7 +34,6 @@ func ScanConfigForServer(source string) (string, error) {
 		if success == false {
 			err = scanner.Err()
 			if err == nil {
-				// fmt.Println("Scan completed and reached EOF")
 				break
 			} else {
 				log.Fatal(err)
@@ -79,6 +78,12 @@ func CreateUserInputStruct(destination, message, source string) UserInput {
 	@returns: N/A
 */
 func handleConnection(c net.Conn) {
+	// even though we don't support multi-messaging at the moment, no reason to possibly be running this multiple times inside the for loop
+	delay, err := getDelayParams()
+	if (err != nil) {
+		fmt.Println("Error: ", err)
+	}
+	
 	for {
 		netData, err := bufio.NewReader(c).ReadString('\n')
         if err != nil {
@@ -86,18 +91,11 @@ func handleConnection(c net.Conn) {
             return
 		}
 		netArray := strings.Fields(netData)
-		delay, err := getDelayParams()
-		if (err != nil) {
-			fmt.Println("Error: ", err)
-		}
+		// generate the network delay on the receive side, must do it here and not in the sendmessage function because we are using goroutines
 		generateDelay(delay)
 		timeOfReceive := time.Now().Format("02 Jan 06 15:04:05.000 MST")
 		fmt.Println("Received " + netArray[0] + " from destination " + netArray[1] + " system time is: " + timeOfReceive)
-		if netArray[0] == "STOP" {
-			break
-		}
 	}
-	c.Close()
 }
 
 
