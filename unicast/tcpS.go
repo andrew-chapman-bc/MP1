@@ -155,7 +155,6 @@ func ConnectToTCPClient(PORT string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("port open: ", PORT)
 	defer l.Close()
 	for {
 		c, err := l.Accept()
