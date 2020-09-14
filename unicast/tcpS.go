@@ -6,7 +6,45 @@ import (
 	"bufio"
 	"strings"
 	"time"
+	"os"
+	"log"
 )
+
+/*
+	@function: ScanConfigForServer
+	@description: Scans the config file for all of the ports that will be used to open concurrent TCP Servers
+	@exported: True
+	@params: N/A
+	@returns: []string
+*/
+func ScanConfigForServer() []string {
+	config, err := os.Open("config.txt")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	scanner := bufio.NewScanner(config)
+	scanner.Split(bufio.ScanLines)
+	portArray := []string{}
+	for {
+		success := scanner.Scan()
+		if success == false {
+			err = scanner.Err()
+			if err == nil {
+				fmt.Println("Scan completed and reached EOF")
+				break
+			} else {
+				log.Fatal(err)
+				break
+			}
+		}
+		configArray := strings.Fields(scanner.Text())
+		port := configArray[2]
+		portArray = append(portArray, port)
+	}
+	return portArray
+}
+
 
 /*
 	@function: CreateUserInputStruct

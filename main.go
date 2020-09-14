@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"strings"
 )
 
 /*
@@ -36,8 +37,23 @@ func getInput() []string {
 func parseInput() (unicast.UserInput, unicast.Connection) {
 	inputArray := getInput()
 	inputStruct := unicast.CreateUserInputStruct(inputArray[1], inputArray[2], os.Args[1])
-	connection := unicast.ScanConfig(inputStruct)
+	connection := unicast.ScanConfigForClient(inputStruct)
 	return inputStruct, connection
+}
+
+/*
+	@function: openTCPServerConnections
+	@description: Opens all of the ports defined in the config file using ScanConfigForServer() to get an array of ports 
+					and ConnectToTCPClient() to open them
+	@exported: False
+	@params: N/A
+	@returns: N/A
+*/
+func openTCPServerConnections() {
+	openPortsArr := unicast.ScanConfigForServer()
+	for _, port := range openPortsArr {
+		unicast.ConnectToTCPClient(port)
+	}
 }
 
 /*
@@ -54,6 +70,7 @@ func unicastSend(inputStruct unicast.UserInput, connection unicast.Connection, w
 
 func main() {
 	var wg sync.WaitGroup
+	openTCPServerConnections()
 	inputStruct, connection := parseInput()
 	wg.Add(2)
 

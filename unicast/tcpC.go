@@ -33,13 +33,13 @@ type Connection struct {
 }
 
 /*
-	@function: ScanConfig
+	@function: ScanConfigForClient
 	@description: Scans the config file using the user input destination and retrieves the ip/port that will later be used to connect to the TCP server
 	@exported: True
 	@params: {userInput} 
 	@returns: {Connection}
 */
-func ScanConfig(userInput UserInput) Connection {
+func ScanConfigForClient(userInput UserInput) Connection {
 
 	destination := userInput.Destination
 	
