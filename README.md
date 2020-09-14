@@ -1,7 +1,9 @@
 #MP1
 --- 
 #To Run
-The config is currently set up to handle 2 processes
+The config is currently set up to handle multiple processes
+
+This example is for two, but to add more, simply repeat steps in new terminals
 
 Open one terminal and enter
 ```bash
@@ -59,6 +61,10 @@ ID2 IP2 port2
 .... .... .......
 -----------------------------------------------------------------------------------------------
 To read the config file, it is read line by line, and uses whitespace to differentiate between the different values
+
+To add more processes, add a new line, with an ID, IP, and port number
+
+TODO: Config old tow process and new four process 
 
 Since the program is basic, it is all that was necessary 
 
