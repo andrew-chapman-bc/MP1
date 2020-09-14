@@ -10,7 +10,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"errors"
 )
 
 // UserInput holds user input such as message, destination and source
@@ -53,6 +52,7 @@ func ScanConfigForClient(userInput UserInput) Connection {
 	scanner := bufio.NewScanner(config)
 	scanner.Split(bufio.ScanLines)
 	var connection Connection
+	counter := 0
 	for {
 		success := scanner.Scan()
 		if success == false {
@@ -65,12 +65,15 @@ func ScanConfigForClient(userInput UserInput) Connection {
 				break
 			}
 		}
-		configArray := strings.Fields(scanner.Text())
-		if configArray[0] == destination {
-			connection.ip = configArray[1]
-			connection.port = configArray[2]
-			connection.source = userInput.Source
+		if counter != 0 {
+			configArray := strings.Fields(scanner.Text())
+			if configArray[0] == destination {
+				connection.ip = configArray[1]
+				connection.port = configArray[2]
+				connection.source = userInput.Source
+			}
 		}
+		counter++
 	}
 	return connection
 } 
@@ -91,7 +94,7 @@ func connectToTCPServer(connect string) (net.Conn, error) {
 		return nil, nil
 	}
 
-	return c, errors.New("Error connecting to server")
+	return c, err
 } 
 
 
@@ -119,7 +122,7 @@ func getDelayParams() (Delay, error) {
 	var delayStruct Delay
 	delayStruct.minDelay = delays[0]
 	delayStruct.maxDelay = delays[1]
-	return delayStruct, errors.New("Error: Cannot fetch delay params")
+	return delayStruct, err
 } 
 
 /*
@@ -148,6 +151,7 @@ func generateDelay (delay Delay) {
 */
 func SendMessage( messageParams UserInput, connection Connection ) {
 	connectionString := connection.ip + ":" + connection.port
+	fmt.Println(connectionString)
 	c, err := connectToTCPServer(connectionString)
 	if (err != nil) {
 		fmt.Println("Network Error: ", err)

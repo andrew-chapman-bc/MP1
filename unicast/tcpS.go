@@ -26,21 +26,25 @@ func ScanConfigForServer() []string {
 	scanner := bufio.NewScanner(config)
 	scanner.Split(bufio.ScanLines)
 	portArray := []string{}
+	counter := 0
 	for {
 		success := scanner.Scan()
 		if success == false {
 			err = scanner.Err()
 			if err == nil {
-				fmt.Println("Scan completed and reached EOF")
+				// fmt.Println("Scan completed and reached EOF")
 				break
 			} else {
 				log.Fatal(err)
 				break
 			}
 		}
-		configArray := strings.Fields(scanner.Text())
-		port := configArray[2]
-		portArray = append(portArray, port)
+		if (counter != 0) {
+			configArray := strings.Fields(scanner.Text())
+			port := configArray[2]
+			portArray = append(portArray, port)
+		}
+		counter++
 	}
 	return portArray
 }
@@ -91,16 +95,18 @@ func handleConnection(c net.Conn) {
 */
 func ConnectToTCPClient(PORT string) {
 	// listen/connect to the tcp client
-	l, err := net.Listen("tcp4", PORT)
+	l, err := net.Listen("tcp4", ":" + PORT)
 	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println("port open: ", PORT)
 	defer l.Close()
 	for {
 		c, err := l.Accept()
 		if err != nil {
 			fmt.Println(err)
 			go handleConnection(c)
+			time.Sleep(1)
 		}
 	}
 }
