@@ -118,7 +118,7 @@ The processes can be found in the unicast directory
 
 In tcpC.go is where the message is sent out to the server
 
-It takes in the parsed input from the main, and connects to the proper destination port 
+It takes in the parsed input from the main, and connects to the proper destination port
 
 It then takes the system time and tells the user what was sent, to where, and at what time
 
