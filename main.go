@@ -6,6 +6,7 @@ import (
 	"os"
 	"sync"
 	"strings"
+	"time"
 )
 
 /*
@@ -19,7 +20,6 @@ func getInput() []string {
 	fmt.Println("Enter input >> ")
 	reader := bufio.NewReader(os.Stdin)
 	input, _ := reader.ReadString('\n')
-	fmt.Print("this is input: " + input + "\n")
 	// input: "send destination message"
 	// input array: [send, destination, message]
 	inputArray := strings.Fields(input)
@@ -55,6 +55,7 @@ func openTCPServerConnections(wg *sync.WaitGroup) {
 	fmt.Println(openPortsArr)
 	defer wg.Done()
 	for _, port := range openPortsArr {
+		// I think the goroutine inside of here is getting stuck and not finishing => only the first port is opened
 		unicast.ConnectToTCPClient(port)
 	}
 }
@@ -69,6 +70,7 @@ func openTCPServerConnections(wg *sync.WaitGroup) {
 func unicastSend(inputStruct unicast.UserInput, connection unicast.Connection, wg *sync.WaitGroup) {
 	defer wg.Done()
 	unicast.SendMessage(inputStruct, connection)
+	time.Sleep(time.Second)
 }
 
 func main() {

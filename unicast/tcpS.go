@@ -105,8 +105,8 @@ func ConnectToTCPClient(PORT string) {
 		c, err := l.Accept()
 		if err != nil {
 			fmt.Println(err)
-			go handleConnection(c)
-			time.Sleep(1)
 		}
+		go handleConnection(c)
+		time.Sleep(1)
 	}
 }

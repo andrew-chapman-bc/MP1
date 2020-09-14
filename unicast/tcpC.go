@@ -58,7 +58,7 @@ func ScanConfigForClient(userInput UserInput) Connection {
 		if success == false {
 			err = scanner.Err()
 			if err == nil {
-				fmt.Println("Scan completed and reached EOF")
+				// fmt.Println("Scan completed and reached EOF")
 				break
 			} else {
 				log.Fatal(err)
