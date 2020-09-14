@@ -98,7 +98,7 @@ func connectToTCPServer(connect string) (net.Conn, error) {
 /*
 	@function: SendMessage
 	@description: 	SendMessage sends the message from TCPClient to TCPServer by connecting to the server and 
-					using the Fprintf function to send the message.  After it does this, it calls generateDelay to simulate a network delay
+					using the Fprintf function to send the message.
 	@exported: True
 	@params: {UserInput}, {Connection}
 	@returns: N/A
