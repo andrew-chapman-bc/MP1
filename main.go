@@ -1,10 +1,10 @@
 package main
 import (
 	"./unicast"
-	"fmt"
-	"strings"
 	"bufio"
+	"fmt"
 	"os"
+	"strings"
 )
 
 func getInput() []string {

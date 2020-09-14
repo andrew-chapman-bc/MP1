@@ -7,13 +7,14 @@ import (
 	"strings"
 )
 
-func createStruct(destination, message string) UserInput {
+//takes the user input and puts it into a struct
 	var input UserInput
 	input.Destination = destination
 	input.Message = message
 	return input
 }
 
+// listen/connect to the tcp client
 func connectToTCPClient(PORT string) net.Conn {
 	// listen/connect to the tcp client
 	l, err := net.Listen("tcp", PORT)
@@ -32,6 +33,7 @@ func connectToTCPClient(PORT string) net.Conn {
 	return c
 }
 
+//takes message from client and returns struct
 func ReceiveMessage(source string) UserInput{
 	if source == "" {
 		fmt.Println("Port number not provided... Exiting")

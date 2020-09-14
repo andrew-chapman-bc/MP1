@@ -18,13 +18,14 @@ type UserInput struct {
 	Message     string
 }
 
+//keeps track of delay bounds from config
 type Delay struct {
 	min_delay string
 	max_delay string
 }
 
+// Dial in to the TCP Server, return the connection to it
 func connectToTCPServer(connect string) net.Conn {
-	// Dial in to the TCP Server, return the connection to it
 	c, err := net.Dial("tcp", connect)
 	if err != nil {
 		fmt.Println(err)
@@ -34,6 +35,7 @@ func connectToTCPServer(connect string) net.Conn {
 	return c
 }
 
+//reads config file for delay bounds
 func getDelay() Delay{
 	config, err := os.Open("config.txt")
 	scanner := bufio.NewScanner(config)
@@ -54,6 +56,7 @@ func getDelay() Delay{
 	return delayStruct
 } 
 
+//reads config file for ID/IP/PORT
 func scanConfig(destination string) []string {
 	
 	getDelay()
@@ -86,6 +89,7 @@ func scanConfig(destination string) []string {
 	return nil
 }
 
+//sends message to TCP server
 func sendMessage(destination, message string) {
 	
 	configArray := scanConfig(destination)
