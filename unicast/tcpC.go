@@ -63,6 +63,7 @@ func ScanConfigForClient(userInput UserInput) Connection {
 			}
 		}
 		if counter != 0 {
+			// TODO: should do some more error handling here to make sure they are accurate ports/ips in the config
 			configArray := strings.Fields(scanner.Text())
 			if configArray[0] == destination {
 				connection.ip = configArray[1]
@@ -114,6 +115,7 @@ func SendMessage( messageParams UserInput, connection Connection ) {
 	}
 	
 	// Sending the message to TCP Server
+	// Easier to send this over as strings since it is only one message, we want the source to know where it comes from
 	fmt.Fprintf(c, messageParams.Message + " " + messageParams.Source + "\n")
 	timeOfSend := time.Now().Format("02 Jan 06 15:04:05.000 MST")
 	fmt.Println("Sent message " + messageParams.Message + " to destination " + messageParams.Destination + " system time is: " + timeOfSend)
