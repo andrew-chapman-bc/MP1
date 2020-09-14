@@ -62,8 +62,10 @@ Received hi from process 2 system time is: 14 Sep 20 18:19 EDT
 ```
 
 ---
+
 #Structure and design
-###TCP Server
+
+##TCP Server
 Each process starts off by initalizing a concurrent TCP server
 The user's commandline input and config file are used to generate the port number
 
@@ -99,9 +101,10 @@ type Connection struct {
 }
 ```
 
-###Config file
+##Config file
 The config file has the following format in a txt file
------------------------------------------------------------------------------------------------    
+-----------------------------------------------------------------------------------------------
+```    
 min_delay(ms) max_delay(ms)
 
 ID1 IP1 port1
@@ -112,6 +115,7 @@ ID3 IP3 port3
 
 ID4 IP4 port4
 
+```
 .... .... .......
 -----------------------------------------------------------------------------------------------
 To read the config file, it is read line by line, and uses whitespace to differentiate between the different values
@@ -119,20 +123,24 @@ To read the config file, it is read line by line, and uses whitespace to differe
 To add more processes, add a new line, with an ID, IP, and port number
 
 For example:
------------------------------------------------------------------------------------------------    
+-----------------------------------------------------------------------------------------------  
+```  
 10 15
 1 127.0.0.1 1234
 2 127.0.0.1 4567
+```
 -----------------------------------------------------------------------------------------------
 
 Goes to 
 
------------------------------------------------------------------------------------------------    
+-----------------------------------------------------------------------------------------------   
+``` 
 10 15
 1 127.0.0.1 1234
 2 127.0.0.1 4567
 3 127.0.0.1 8543
 4 127.0.0.1 1432
+```
 -----------------------------------------------------------------------------------------------
 
 To go from 2 to 4 processes
