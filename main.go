@@ -5,6 +5,7 @@ import (
 	"strings"
 	"bufio"
 	"os"
+	"sync"
 )
 
 func getInput() []string {
@@ -19,15 +20,43 @@ func getInput() []string {
 
 }
 
-func createStruct(destination, message string) unicast.UserInput {
-	var input unicast.UserInput
-	input.Destination = destination
-	input.Message = message
-	return input
+func parseInput() (unicast.UserInput, unicast.Connection) {
+	inputArray := getInput()
+	inputStruct := unicast.CreateUserInputStruct(inputArray[1], inputArray[2], os.Args[1])
+	connection := unicast.ScanConfig(inputStruct)
+	return inputStruct, connection
+}
+
+func unicast_send(inputStruct, connection) {
+	defer wg.Done()
+	unicast.SendMessage(inputStruct, connection)
 }
 
 func main() {
-	inputArray := getInput() 
-	inputStruct := createStruct(inputArray[1], inputArray[2])
-	unicast_send(inputStruct.Destination, inputStruct.Message)
+	var wg sync.WaitGroup
+	inputStruct, connection := parseInput()
+	wg.Add(2)
+
+	go unicast_send(inputStruct, connection)
 }
+
+
+/* 
+//	Throwing this here for now
+// 
+func sleepFun(sec time.Duration, wg *sync.WaitGroup) {
+    defer wg.Done()
+    time.Sleep(sec * time.Second)
+    fmt.Println("goroutine exit")
+}
+
+func main() {
+    var wg sync.WaitGroup
+
+    wg.Add(2)
+    go sleepFun(1, &wg)
+    go sleepFun(3, &wg)
+    wg.Wait()
+    fmt.Println("Main goroutine exit")
+}
+*/
