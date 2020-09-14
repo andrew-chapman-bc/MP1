@@ -6,7 +6,6 @@ import (
 	"os"
 	"sync"
 	"strings"
-	"time"
 	"github.com/akamensky/argparse"
 	"strconv"
 )
@@ -39,7 +38,6 @@ func getInput() []string {
 func parseInput(source *string) (unicast.UserInput, unicast.Connection) {
 	inputArray := getInput()
 	inputStruct := unicast.CreateUserInputStruct(inputArray[1], inputArray[2], *source)
-	fmt.Println(inputStruct)
 	connection := unicast.ScanConfigForClient(inputStruct)
 	return inputStruct, connection
 }
@@ -70,7 +68,6 @@ func openTCPServerConnections( source *string, wg *sync.WaitGroup) {
 func unicastSend(inputStruct unicast.UserInput, connection unicast.Connection, wg *sync.WaitGroup) {
 	defer wg.Done()
 	unicast.SendMessage(inputStruct, connection)
-	time.Sleep(time.Second)
 }
 
 func main() {
@@ -89,5 +86,4 @@ func main() {
 	wg.Add(1)
 	go unicastSend(inputStruct, connection, &wg)
 	wg.Wait()
-	fmt.Println("We finished!")
 }
