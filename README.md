@@ -65,7 +65,7 @@ Received hi from process 2 system time is: 14 Sep 20 18:19 EDT
 
 #Structure and design
 
-##TCP Server
+TCP Server
 Each process starts off by initalizing a concurrent TCP server
 The user's commandline input and config file are used to generate the port number
 
@@ -101,7 +101,7 @@ type Connection struct {
 }
 ```
 
-##Config file
+#Config file
 The config file has the following format in a txt file
 -----------------------------------------------------------------------------------------------
 ```    
@@ -151,7 +151,7 @@ Since the program is basic, it is all that was necessary
 
 In a more complex program, we would use a different file format of the config, i.e JSON
 
-###Input
+#Input
 The user inputs three strings, : 
 1. "Send"
 2. Destination 
@@ -161,7 +161,7 @@ The program reads each string individually, the first one is disregarded, the se
 
 Since the message is so small, we choose not to serialize into another format such as GOB or JSON
 
-###Processes
+#Processes
 The processes can be found in the unicast directory
 
 In tcpC.go is where the message is sent out to the server
