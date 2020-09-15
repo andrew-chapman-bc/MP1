@@ -171,23 +171,28 @@ It takes in the parsed input from the main, and connects to the proper destinati
 It then takes the system time and tells the user what was sent, to where, and at what time
 
 
+
+
+
 ```
+// Scans the config file using the user input destination and retrieves the ip/port that will later be used to connect to the TCP server
 func ScanConfigForClient(userInput UserInput) Connection
 ```
-Scans the config file using the user input destination and retrieves the ip/port that will later be used to connect to the TCP server
 
-```
-func connectToTCPServer(connect string) (net.Conn, error) 
-```
-
-Connects to the TCP server with the ip/port obtained from config file as a parameter, and uses the Dial function from the net library to return the connection to the server which will later be used to write to the server
 
 
 ```
+// Connects to the TCP server with the ip/port obtained from config file as a parameter, and uses the Dial function from the net library to return the // .//// connection to the server which will later be used to write to the server
+func connectToTCPServer(connect string) (net.Conn, error)
+
+```
+
+
+
+```
+// SendMessage sends the message from TCPClient to TCPServer by connecting to the server and using the Fprintf function to send the message.
 func SendMessage( messageParams UserInput, connection Connection )
 ```
-
-SendMessage sends the message from TCPClient to TCPServer by connecting to the server and using the Fprintf function to send the message.
 
 
 
@@ -197,44 +202,44 @@ In tcpS.go,
 
 
 ```
+// ScanConfigForServer scans the config file for the port that will be used, and returns an error "cannot find port" if the port is not found for user convenience.
 func ScanConfigForServer(source string) (string, error)
 ```
 
-This function scans the config file for the port that will be used, and returns an error "cannot find port" if the port is not found for user convenience.
-
 
 ```
+// CreateUserInputStruct is used to easily create the userInput struct that is needed throughout the code (this contains the destination, message and source)
 func CreateUserInputStruct(destination, message, source string) UserInput
 ```
- 
-is used to easily create the userInput struct that is needed throughout the code (this contains the destination, message and source)
+
 
 
 ``` 
+// handleConnection function is used to receive the messages and is used as a goroutine so there is a separate thread for it.  
+// We call the getDelayParams function here outside of the for loop so if we ever decided to add support for multi-messaging the delay doesn't get
+// meaninglessly calculated.  
 func handleConnection(c net.Conn)
 ```
 
-function is used to receive the messages and is used as a goroutine so there is a separate thread for it.  
-We call the getDelayParams function here outside of the for loop so if we ever decided to add support for multi-messaging the delay doesn't get meaninglessly calculated.  
 
 
 ``` 
+// ConnectToTCPClient is used call the net.Listen function to connect the TCP client and keep a TCP Client connection constantly open.  This is why we have
+// the for loop and goroutine handleConnection call.
 func ConnectToTCPClient(PORT string)  
 ```
 
-is used call the net.Listen function to connect the TCP client and keep a TCP Client connection constantly open.  This is why we have the for loop and goroutine handleConnection call.
 
-``` 
+```
+// generateDelay uses the delay parameters obtained from getDelayParams() to generate the delay that will be used in SendMessage function
 func generateDelay (delay Delay)
 ```
 
-Uses the delay parameters obtained from getDelayParams() to generate the delay that will be used in SendMessage function
-
 ``` 
+// getDelayParams scans the config file for the first line to get the delay parameters that will be used to simulate the network delay
 func getDelayParams() (Delay, error)
 ```
 
-Scans the config file for the first line to get the delay parameters that will be used to simulate the network delay
 
 
 
